@@ -5,5 +5,12 @@
     "firebase.json",
     "**/.*",
     "**/node_modules/**"
-  ]
+  ],
+  "rules": {
+    ".read": true,
+    ".write": true,
+    "sections": {
+    	".indexOn" : ["order"]
+    }
+  }
 }

@@ -63,9 +63,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <!-- build:remove -->
   <span id="browser-sync-binding"></span>
   <!-- endbuild -->
-
   <template is="dom-bind" id="app">
-
+    <firebase-collection
+      order-by-child="order"
+      limit-to-first="3"
+      location="https://vegeta-db.firebaseio.com/sections"
+      data="{{sections}}"></firebase-collection>
     <paper-drawer-panel id="paperDrawerPanel">
       <!-- Drawer Scroll Header Panel -->
       <paper-scroll-header-panel drawer fixed>
@@ -74,7 +77,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <paper-toolbar id="drawerToolbar">
           <span class="menu-name">Menu</span>
         </paper-toolbar>
-
         <!-- Drawer Content -->
         <paper-menu class="app-menu" attr-for-selected="data-route" selected="[[route]]">
           <a data-route="home" href="{{baseUrl}}">
@@ -82,20 +84,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <span>Home</span>
           </a>
 
-          <a data-route="users" href="{{baseUrl}}users">
-            <iron-icon icon="info"></iron-icon>
-            <span>Users</span>
-          </a>
-
-          <a data-route="contact" href="{{baseUrl}}contact">
-            <iron-icon icon="mail"></iron-icon>
-            <span>Contact</span>
-          </a>
-
-          <a data-route="books" href="{{baseUrl}}books">
-            <iron-icon icon="book"></iron-icon>
-            <span>Books</span>
-          </a>
+          <template is="dom-repeat" items="[[sections]]" as="section">
+            <a data-route="[[section.__firebaseKey__]]" href="{{baseUrl}}[[section.__firebaseKey__]]">
+              <iron-icon icon="[[section.icon]]"></iron-icon>
+              <span>[[section.title]]</span>
+            </a>
+          </template>
         </paper-menu>
       </paper-scroll-header-panel>
 
@@ -125,6 +119,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <!-- Main Content -->
         <div class="content">
           <iron-pages attr-for-selected="data-route" selected="{{route}}">
+
             <section data-route="home" tabindex="-1">
               <paper-material elevation="1">
                 <my-greeting></my-greeting>
@@ -159,37 +154,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               </paper-material>
             </section>
 
-            <section data-route="users" tabindex="-1">
+          <template is="dom-repeat" items="[[sections]]" as="section">
+            <section data-route="[[section.__firebaseKey__]]" tabindex="-1">
               <paper-material elevation="1">
-                <h1 class="page-title" tabindex="-1">Users</h1>
-                <p>This is the users section</p>
-                <a href$="{{baseUrl}}users/Addy">Addy</a><br>
-                <a href$="{{baseUrl}}users/Rob">Rob</a><br>
-                <a href$="{{baseUrl}}users/Chuck">Chuck</a><br>
-                <a href$="{{baseUrl}}users/Sam">Sam</a>
+                <h1 class="page-title" tabindex="-1">[[section.title]]</h1>
+                <p>[[section.content]]</p>
               </paper-material>
             </section>
-
-            <section data-route="user-info" tabindex="-1">
-              <paper-material elevation="-1">
-                <h1 class="page-title" tabindex="-1">User: {{params.name}}</h1>
-                <div>This is {{params.name}}'s section</div>
-              </paper-material>
-            </section>
-
-            <section data-route="contact" tabindex="-1">
-              <paper-material elevation="1">
-                <h1 class="page-title" tabindex="-1">Contact</h1>
-                <p>This is the contact section</p>
-              </paper-material>
-            </section>
-
-            <section data-route="books" tabindex="-1">
-              <paper-material elevation="1">
-                <h1 class="page-title" tabindex="-1">Books</h1>
-                <p>This is the books section</p>
-              </paper-material>
-            </section>
+          </template>
           </iron-pages>
         </div>
       </paper-scroll-header-panel>
