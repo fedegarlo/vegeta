@@ -4,7 +4,7 @@
 > A starting point for building web applications with Polymer 1.0
 
 ## Collaborators
-* Francisco Navarro
+* Paco Navarro (francisco-navarro)
 
 ### Included out of the box:
 
