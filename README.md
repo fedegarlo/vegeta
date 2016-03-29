@@ -3,6 +3,9 @@
 
 > A starting point for building web applications with Polymer 1.0
 
+## Collaborators
+* Paco Navarro
+
 ### Included out of the box:
 
 * [Polymer](https://www.polymer-project.org/), [Paper](https://elements.polymer-project.org/browse?package=paper-elements), [Iron](https://elements.polymer-project.org/browse?package=iron-elements) and [Neon](https://elements.polymer-project.org/browse?package=neon-elements) elements
@@ -24,7 +27,7 @@ Check out the Polymer Starter Kit tutorials on [polymer-project.org](https://www
 * [Create a page](https://www.polymer-project.org/1.0/docs/start/psk/create-a-page.html)
 * [Deploy the PSK to the web](https://www.polymer-project.org/1.0/docs/start/psk/deploy.html)
 
-## Getting Started
+## Getting Started 
 
 To take advantage of Polymer Starter Kit you need to:
 
