@@ -4,7 +4,7 @@
 > A starting point for building web applications with Polymer 1.0
 
 ## Collaborators
-* Paco Navarro
+* Francisco Navarro
 
 ### Included out of the box:
 
@@ -27,7 +27,7 @@ Check out the Polymer Starter Kit tutorials on [polymer-project.org](https://www
 * [Create a page](https://www.polymer-project.org/1.0/docs/start/psk/create-a-page.html)
 * [Deploy the PSK to the web](https://www.polymer-project.org/1.0/docs/start/psk/deploy.html)
 
-## Getting Started 
+## Getting Started
 
 To take advantage of Polymer Starter Kit you need to:
 
