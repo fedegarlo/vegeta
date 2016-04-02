@@ -156,10 +156,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           <template is="dom-repeat" items="[[sections]]" as="section">
             <section data-route="[[section.__firebaseKey__]]" tabindex="-1">
-              <paper-material elevation="1">
-                <h1 class="page-title" tabindex="-1">[[section.title]]</h1>
-                <p>[[section.content]]</p>
-              </paper-material>
+              <paper-card heading="[[section.title]]" image="http://placehold.it/450x150">
+                <div class="card-content">
+                  [[section.content]]             
+                </div>
+                <div class="card-actions">
+                  <paper-button>Some action</paper-button>
+                  <paper-button>Another action</paper-button>
+                </div>
+              </paper-card>
             </section>
           </template>
           </iron-pages>
