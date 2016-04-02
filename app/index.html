@@ -16,7 +16,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="generator" content="Polymer Starter Kit">
-  <title>PMI-ACP Certification</title>
+  <title>Agilemeter</title>
 
   <!-- Place favicon.ico in the `app/` directory -->
 
@@ -67,16 +67,29 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <!--<firebase-collection
       order-by-child="order"
       limit-to-first="3"
-      location="https://vegeta-db.firebaseio.com/sections"
+      location="https://agilemeter.firebaseio.com/sections"
       data="{{sections}}"></firebase-collection>-->
     <firebase-collection
       limit-to-first="40"
-      location="https://vegeta-db.firebaseio.com/questions"
+      location="https://agilemeter.firebaseio.com/questions"
       data="{{questions}}"></firebase-collection>
     <paper-drawer-panel id="paperDrawerPanel">
       <!-- Drawer Scroll Header Panel -->
       <paper-scroll-header-panel drawer fixed>
 
+        <style is="custom-style">
+          paper-toolbar {
+            --paper-toolbar-background: #0091e5;
+            };
+          }
+        </style>
+        <style is="custom-style">
+          paper-menu {
+            --paper-menu-selected-item: {
+              background-color : #B2E3FF;
+            };
+          }
+        </style>
         <!-- Drawer Toolbar -->
         <paper-toolbar id="drawerToolbar">
           <span class="menu-name">Menu</span>
@@ -111,7 +124,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           <!-- Application name -->
           <div class="middle middle-container">
-            <div class="app-name">PMI-ACP Certification</div>
+            <div class="app-name">Agilemeter</div>
           </div>
 
           <!-- Application sub title -->
