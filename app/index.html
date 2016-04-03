@@ -118,7 +118,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <firebase-collection
       start-at="0"
       order-by-key
-      limit-to-first="40"
+      limit-to-first="1000"
       location="https://agilemeter.firebaseio.com/questions"
       data="{{questions}}"></firebase-collection>
     <paper-drawer-panel id="paperDrawerPanel">
@@ -184,7 +184,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <div class="content">
           <iron-pages attr-for-selected="data-route" selected="{{route}}">
             <section data-route="home" tabindex="-1">
-              <template is="dom-repeat" items="[[questions]]" as="question">
+              <template is="dom-repeat" items="[[questions]]" as="question" filter="_isQuestion">
                   <paper-material elevation="1">
                     <div class="card-content">
                       <p>[[question.question]]</p>

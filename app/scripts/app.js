@@ -78,4 +78,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     app.$.paperDrawerPanel.closeDrawer();
   };
 
+  app.dbLength = 994;
+  app.testLength = 40;
+  app.first = Math.floor(Math.random() * app.dbLength - (app.testLength -1));
+
+  app._isQuestion = function(question) {
+    if (!question) return false;
+    return question.__firebaseKey__ >= app.first && question.__firebaseKey__ < app.first + app.testLength;
+  };
+
 })(document);
