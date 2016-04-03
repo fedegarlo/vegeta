@@ -69,7 +69,55 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       limit-to-first="3"
       location="https://agilemeter.firebaseio.com/sections"
       data="{{sections}}"></firebase-collection>-->
+    <dom-module id="my-question">
+        <style>
+            .red { color: red; }
+        </style>
+        <template>
+          <div class="card-actions">
+            <template is="dom-repeat" items="[[options]]" as="option">
+              <paper-button on-click="handleClick">
+                <template is="dom-if" if="{{show(option)}}">
+                  <iron-icon icon="check" hidden$="{{notAnswered}}"></iron-icon>
+                </template>
+                [[option]]
+              </paper-button>
+            </template>
+          </div>
+          <p hidden$="{{notAnswered}}">
+            <content></content>
+          </p>
+        </template>
+        <script>
+            Polymer({
+                is: 'my-question',
+                properties: {
+                  notAnswered: {
+                      type: Boolean,
+                      value: true
+                  },
+                  correctAnswer: {
+                    type: String,
+                    value: ''
+                  },
+                  options : {
+                    type: Array,
+                    value: function() { return ['A','B','C','D']; }
+                  }
+                },
+                showAnswer: false,
+                handleClick: function(e) {
+                  this.notAnswered = false;
+                },
+                show: function(option) {
+                  return option === this.correctAnswer;
+                }
+            });
+        </script>
+    </dom-module>
     <firebase-collection
+      start-at="0"
+      order-by-key
       limit-to-first="40"
       location="https://agilemeter.firebaseio.com/questions"
       data="{{questions}}"></firebase-collection>
@@ -120,7 +168,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           <!-- Toolbar icons -->
           <paper-icon-button icon="refresh"></paper-icon-button>
-          <paper-icon-button icon="search"></paper-icon-button>
 
           <!-- Application name -->
           <div class="middle middle-container">
@@ -144,13 +191,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                       <template is="dom-repeat" items="[[question.answers]]" as="answer">
                         <p>[[answer.option]]. [[answer.text]]</p>
                       </template>             
-                    </div>
-                    <div class="card-actions">
-                      <paper-button>A</paper-button>
-                      <paper-button>B</paper-button>
-                      <paper-button>C</paper-button>
-                      <paper-button>D</paper-button>
-                    </div>
+                    </div>                    
+                    <my-question correct-answer="{{question.correct.option}}">
+                      [[question.correct.text]]
+                    </my-question>
                   </paper-material>
               </template>
             </section>
