@@ -87,4 +87,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     return question.__firebaseKey__ >= app.first && question.__firebaseKey__ < app.first + app.testLength;
   };
 
+  app._computeSort = function(a, b) {
+    if (a.question == b.question) {
+        return 0;
+    }
+    return a.question > b.question ? -1 : 1;
+  };
+
 })(document);
