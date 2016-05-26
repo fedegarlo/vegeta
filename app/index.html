@@ -77,10 +77,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <div class="card-actions">
             <template is="dom-repeat" items="[[options]]" as="option">
               <paper-button on-click="handleClick">
+                [[option]]
                 <template is="dom-if" if="{{show(option)}}">
                   <iron-icon icon="check" hidden$="{{notAnswered}}"></iron-icon>
                 </template>
-                [[option]]
               </paper-button>
             </template>
           </div>
