@@ -1,16 +1,17 @@
 {
-  "firebase": "agilemeter",
-  "public": "dist",
-  "ignore": [
+  "hosting": {
+    "public": "dist",
+    "ignore": [
     "firebase.json",
     "**/.*",
     "**/node_modules/**"
-  ],
-  "rules": {
-    ".read": true,
-    ".write": true,
-    "sections": {
-    	".indexOn" : ["order"]
+    ],
+    "rules": {
+      ".read": true,
+      ".write": true,
+      "sections": {
+        ".indexOn" : ["order"]
+      }
     }
   }
 }
