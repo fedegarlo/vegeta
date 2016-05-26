@@ -115,9 +115,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             });
         </script>
     </dom-module>
-    <firebase-collection
+    <!--<firebase-collection
       location="https://agilemeter.firebaseio.com/questions"
-      data="{{questions}}"></firebase-collection>
+      data="{{questions}}"></firebase-collection>-->
+    <iron-ajax
+      auto
+      url="db/questions.json"
+      params='{"alt":"json", "q":"chrome"}'
+      handle-as="json"
+      on-response="handleResponse"
+      debounce-duration="300"></iron-ajax>
     <paper-drawer-panel id="paperDrawerPanel">
       <!-- Drawer Scroll Header Panel -->
       <paper-scroll-header-panel drawer fixed>

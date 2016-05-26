@@ -14,6 +14,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   // and give it some initial binding values
   // Learn more about auto-binding templates at http://goo.gl/Dx1u2g
   var app = document.querySelector('#app');
+
+  //mode firebase or local (json)
+  app.localMode = true;
   
   // Sets app default base URL
   app.baseUrl = '/';
@@ -84,7 +87,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   app._isQuestion = function(question) {
     if (!question) return false;
-    return question.__firebaseKey__ >= app.first && question.__firebaseKey__ < app.first + app.testLength;
+    return app.localMode || (question.__firebaseKey__ >= app.first && question.__firebaseKey__ < app.first + app.testLength);
   };
 
   app._computeSort = function(a, b) {
@@ -93,5 +96,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     }
     return a.question > b.question ? -1 : 1;
   };
+
+  app.handleResponse = function (data) {
+    this.questions = data.detail.response.questions.slice(app.first, app.first + 40);
+  }
 
 })(document);
