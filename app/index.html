@@ -64,11 +64,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <span id="browser-sync-binding"></span>
   <!-- endbuild -->
   <template is="dom-bind" id="app">
-    <!--<firebase-collection
+    <firebase-collection
       order-by-child="order"
       limit-to-first="3"
       location="https://agilemeter.firebaseio.com/sections"
-      data="{{sections}}"></firebase-collection>-->
+      data="{{sections}}"></firebase-collection>
     <dom-module id="my-question">
         <style>
             .red { color: red; }
@@ -198,13 +198,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           <template is="dom-repeat" items="[[sections]]" as="section">
             <section data-route="[[section.__firebaseKey__]]" tabindex="-1">
-              <paper-card heading="[[section.title]]" image="http://placehold.it/450x150">
+              <paper-card heading="[[section.title]]">
                 <div class="card-content">
                   [[section.content]]             
-                </div>
-                <div class="card-actions">
-                  <paper-button>Some action</paper-button>
-                  <paper-button>Another action</paper-button>
                 </div>
               </paper-card>
             </section>
