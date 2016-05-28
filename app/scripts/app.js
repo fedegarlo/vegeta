@@ -34,6 +34,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   // have resolved and content has been stamped to the page
   app.addEventListener('dom-change', function() {
     console.log('Our app is ready to rock!');
+      var login = document.querySelector('#login');
+        login.addEventListener('sign-in', function(e){
+          app.collection = "https://agilemeter.firebaseio.com/questions";
+          app.loggedUser = e.detail;
+          //console.log(app.loggedUser);
+        });
   });
   
   // See https://github.com/Polymer/polymer/issues/1381
@@ -81,6 +87,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   app.dbLength = 994;
   app.testLength = 40;
   app.first = Math.floor(Math.random() * app.dbLength - (app.testLength -1));
+  app.collection = '';
+  app.loggedUser = null;
 
   app._isQuestion = function(question) {
     if (!question) return false;
@@ -92,6 +100,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return 0;
     }
     return a.question > b.question ? -1 : 1;
+  };
+
+  app.logged = function() {
+   return app.logged;
   };
 
 })(document);

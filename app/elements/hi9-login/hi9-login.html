@@ -1,0 +1,156 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/google-signin/google-signin-aware.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<!--
+[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](http://standardjs.com/)
+@demo https://hi9.uk/
+-->
+<dom-module id="hi9-login">
+  <style>
+    paper-button {
+      background: #039be5;
+      color: white;
+      font-weight: 300px;
+    }
+  </style>
+  <template>
+    <google-signin-aware id="aware"
+      client-id="{{ clientId }}"
+      scopes="profile https://www.googleapis.com/auth/firebase.database"
+      openid-prompt="{{openidPromptValue}}"
+      signed-in="{{signedIn}}"
+      offline="{{offline}}"
+      is-authorized="{{isAuthorized}}"
+      need-additional-auth="{{needAdditionalAuth}}"
+      on-google-signin-aware-success="handleSignIn"
+      on-google-signin-offline-success="handleOffline"
+      on-google-signin-aware-signed-out="handleSignOut">
+    </google-signin-aware>
+    <paper-button raised on-tap="logout" hidden$="{{!signedIn}}"> Logout </paper-button>
+    <paper-button raised on-tap="login" hidden$="{{signedIn}}"> {{loginText}} </paper-button>
+  </template>
+</dom-module>
+<script>
+(function () {
+  'use strict'
+  Polymer({
+    is: 'hi9-login',
+    properties: {
+      params: {type: Object,value: {scope: 'email'}},
+      provider: {type: String, value: "google"},
+      loginText: {value: "Login with Google"},
+      message: {type: String, value: ''},
+      email: {type: String, value: ''},
+      password: {type: String, value: ''},
+      user: {type: Object, value: null, computed: "getUser(_user, signedIn)", notify: true},
+      locationDomain: {type: Object, computed: "getLocationDomain(app)"},
+      uid: {computed: 'returnVal(user.uid)',notify: true},
+      signedIn: {type: Boolean, value: false},
+      statusKnown: {type: Boolean}
+    },
+    getLocationDomain: function (app) {
+      return app+".firebaseapp.com"
+    },
+    get_url: function(app) {
+      return "https://"+app+".firebaseio.com"
+    },
+    getUser: function(_user, signedIn) {
+      if (signedIn) {
+        return _user
+      } else {
+        return null
+      }
+    },
+    returnVal: function (val) {
+      if (val !== undefined && val !== null) {
+        return val
+      } else {
+        return undefined
+      }
+    },
+    login: function () {this.$.aware.signIn()},
+    logout: function () {
+      this.$.aware.signOut()
+      window.location.href = "/"
+    },
+    errorHandler: function (e) {
+      this.message = 'Error: ' + e.detail.message
+    },
+    handleSignIn: function (e) {
+      var profile = gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile()
+      this._user = {
+        email: profile.getEmail(), 
+        familyName: profile.getFamilyName(), 
+        givenName: profile.getGivenName(), 
+        displayName: profile.getGivenName() + " " + profile.getGivenName(),
+        uid: "google:" + profile.getId(), 
+        imageUrl: profile.getImageUrl(), 
+        getName: profile.getName(),
+        token: e.detail.access_token
+      }
+      this.fire('sign-in', this._user);
+    },
+    createUserHandler: function (e) {
+      this.$.firebaseLogin.createUser(this.email, this.password)
+    },
+    changePasswordHandler: function (e) {
+      this.$.firebaseLogin.changePassword(this.email, this.password, this.newPassword)
+    },
+    resetPasswordHandler: function (e) {
+      this.$.firebaseLogin.sendPasswordResetEmail(this.email)
+    },
+    computePasswordHidden: function (provider) {
+      return provider !== 'password'
+    },
+    computeCreateUserDisabled: function (email, password) {
+      return !email || !password
+    },
+    computeChangePasswordDisabled: function (email, password, newPassword) {
+      return !email || !password || !newPassword
+    },
+    computeResetPasswordDisabled: function (email, password) {
+      return !email || !password
+    },
+    computeRemoveUserDisabled: function (email, password) {
+      return !email || !password
+    },
+    isAdmin: function (role) {
+      return role === 'admin'
+    }
+  })
+
+  function clone (obj) {
+    var copy
+
+    // Handle the 3 simple types, and null or undefined
+    if (obj === null || typeof obj !== 'object') return obj
+
+    // Handle Date
+    if (obj instanceof Date) {
+      copy = new Date()
+      copy.setTime(obj.getTime())
+      return copy
+    }
+
+    // Handle Array
+    if (obj instanceof Array) {
+      copy = []
+      for (var i = 0, len = obj.length; i < len; i++) {
+        copy[i] = clone(obj[i])
+      }
+      return copy
+    }
+
+    // Handle Object
+    if (obj instanceof Object) {
+      copy = {}
+      for (var attr in obj) {
+        if (obj.hasOwnProperty(attr)) copy[attr] = clone(obj[attr])
+      }
+      return copy
+    }
+
+    throw new Error("Unable to copy obj! Its type isn't supported.")
+  }
+})()
+</script>

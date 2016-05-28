@@ -116,7 +116,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </script>
     </dom-module>
     <firebase-collection
-      location="https://agilemeter.firebaseio.com/questions"
+      location=[[collection]]
       data="{{questions}}"></firebase-collection>
     <paper-drawer-panel id="paperDrawerPanel">
       <!-- Drawer Scroll Header Panel -->
@@ -181,6 +181,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <div class="content">
           <iron-pages attr-for-selected="data-route" selected="{{route}}">
             <section data-route="home" tabindex="-1">
+              <paper-material elevation="1">
+                <div class="card-content">
+                  <p hidden$="{{!loggedUser}}">Welcome [[loggedUser.getName]]</p>
+                  <p><hi9-login id="login" client-id="724053666469-041lnlm9mt1vs2to4kflosa3lkgtt3j0.apps.googleusercontent.com"></hi9-login></p>
+                </div>
+              </paper-material>
               <template is="dom-repeat" items="[[questions]]" as="question" filter="_isQuestion" sort="_computeSort">
                   <paper-material elevation="1">
                     <div class="card-content">
