@@ -6,12 +6,22 @@
     "**/.*",
     "**/node_modules/**"
     ],
-    "rules": {
-      ".read": true,
-      ".write": true,
-      "sections": {
-        ".indexOn" : ["order"]
-      }
+     "rules": {
+        "user": {
+          "$uid": {
+            ".read": "auth != null && auth.uid == $uid",
+            ".write": "auth != null && auth.uid == $uid"
+          }
+        },
+        "questions": {
+            ".read": true,
+            ".write": false          
+        },
+        "sections": {
+           ".indexOn" : ["order"],
+            ".read": true,
+            ".write": false          
+        }
     }
   }
 }

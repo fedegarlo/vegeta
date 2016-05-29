@@ -37,7 +37,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <!-- Add to homescreen for Safari on iOS -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="PMI-ACP Certification">
+  <meta name="apple-mobile-web-app-title" content="Agilemeter">
   <link rel="apple-touch-icon" href="images/touch/apple-touch-icon.png">
 
   <!-- Tile icon for Win8 (144x144) -->
@@ -64,11 +64,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <span id="browser-sync-binding"></span>
   <!-- endbuild -->
   <template is="dom-bind" id="app">
+    <firebase-auth
+      id="authCtrl"
+      redirect
+      location="[[firebaseURL]]"
+      provider="[[firebaseProvider]]"
+      on-error="onFirebaseError"
+      on-login="onFirebaseLogin"></firebase-auth>
+    <paper-toast id="errorToast"></paper-toast>
     <firebase-collection
       order-by-child="order"
       limit-to-first="3"
       location="https://agilemeter.firebaseio.com/sections"
       data="{{sections}}"></firebase-collection>
+    <firebase-collection
+      location=[[collection]]
+      data="{{questions}}"></firebase-collection>
     <dom-module id="my-question">
         <style>
             .red { color: red; }
@@ -115,9 +126,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             });
         </script>
     </dom-module>
-    <firebase-collection
-      location=[[collection]]
-      data="{{questions}}"></firebase-collection>
     <paper-drawer-panel id="paperDrawerPanel">
       <!-- Drawer Scroll Header Panel -->
       <paper-scroll-header-panel drawer fixed>
@@ -152,6 +160,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <span>[[section.title]]</span>
             </a>
           </template>
+
+            <a data-route="profile" href="{{baseUrl}}profile" hidden$="{{!loggedUser}}">
+              <iron-icon icon="account-circle"></iron-icon>
+              <span>Profile</span>
+            </a>
         </paper-menu>
       </paper-scroll-header-panel>
 
@@ -181,36 +194,59 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <div class="content">
           <iron-pages attr-for-selected="data-route" selected="{{route}}">
             <section data-route="home" tabindex="-1">
-              <paper-material elevation="1">
+              <paper-card hidden$="{{loggedUser}}" image="images/welcome.png">
                 <div class="card-content">
-                  <p hidden$="{{!loggedUser}}">Welcome [[loggedUser.getName]]</p>
-                  <p><hi9-login id="login" client-id="724053666469-041lnlm9mt1vs2to4kflosa3lkgtt3j0.apps.googleusercontent.com"></hi9-login></p>
+                  Are you ready for the Agile exam? Here you have more than 1000 questions to find out. Good luck.
                 </div>
-              </paper-material>
-              <template is="dom-repeat" items="[[questions]]" as="question" filter="_isQuestion" sort="_computeSort">
-                  <paper-material elevation="1">
-                    <div class="card-content">
-                      <p>[[question.question]]</p>
-                      <template is="dom-repeat" items="[[question.answers]]" as="answer">
-                        <p>[[answer.option]]. [[answer.text]]</p>
-                      </template>             
-                    </div>                    
-                    <my-question correct-answer="{{question.correct.option}}">
-                      [[question.correct.text]]
-                    </my-question>
-                  </paper-material>
-              </template>
+                <div class="card-actions">
+                  <paper-button on-tap="login">Sign up with Google</paper-button>
+                </div>
+              </paper-card>
+              <div hidden$="{{!loggedUser}}">
+                <paper-card hidden$="{{questionsLoaded}}" heading="Loading questions..." class="white">
+                  <div class="card-content">
+                    Hello again, we are choosing 40 questions for your continuous improvement...
+                  </div>
+                </paper-card>
+                <template is="dom-repeat" items="[[questions]]" as="question" filter="_isQuestion" sort="_computeSort" on-dom-change="doAnimation">
+                  <div id="questions">
+                    <paper-card data-question class="question">
+                      <div class="card-content">
+                        [[question.question]]
+                          <template is="dom-repeat" items="[[question.answers]]" as="answer">
+                            <p>[[answer.option]]. [[answer.text]]</p>
+                          </template>  
+                        </div>           
+                        <my-question correct-answer="{{question.correct.option}}">
+                          <div class="card-content">[[question.correct.text]]</div>
+                        </my-question>                 
+                      </paper-card>
+                    </div>
+                </template>
+              </div>
             </section>
 
           <template is="dom-repeat" items="[[sections]]" as="section">
             <section data-route="[[section.__firebaseKey__]]" tabindex="-1">
               <paper-card heading="[[section.title]]">
                 <div class="card-content">
-                  [[section.content]]             
+                  [[section.content]]
                 </div>
               </paper-card>
             </section>
           </template>
+
+            <section data-route="profile" tabindex="-1" hidden$="{{!loggedUser}}">
+              <paper-card heading="Profile">
+                <div class="card-content">
+                  Hi, [[loggedUser.google.displayName]]. Very soon , you'll find your stats here. We are in Beta mode , but you can go to practice your knowledge . What are you waiting for?
+                </div>
+                <div class="card-actions">
+                  <paper-button on-tap="logout">Log out</paper-button>
+                </div>
+              </paper-card>
+            </section>
+
           </iron-pages>
         </div>
       </paper-scroll-header-panel>

@@ -34,12 +34,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   // have resolved and content has been stamped to the page
   app.addEventListener('dom-change', function() {
     console.log('Our app is ready to rock!');
-      var login = document.querySelector('#login');
-        login.addEventListener('sign-in', function(e){
-          app.collection = "https://agilemeter.firebaseio.com/questions";
-          app.loggedUser = e.detail;
-          //console.log(app.loggedUser);
-        });
+      var authCtrl = document.querySelector('#authCtrl');
   });
   
   // See https://github.com/Polymer/polymer/issues/1381
@@ -84,11 +79,69 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     app.$.paperDrawerPanel.closeDrawer();
   };
 
+  app.login = function () {
+    authCtrl.login();
+  }
+
+  app.logout = function() {
+    authCtrl.logout();
+    app.loggedUser = null;
+    window.location.href = "/";
+  };
+
   app.dbLength = 994;
   app.testLength = 40;
   app.first = Math.floor(Math.random() * app.dbLength - (app.testLength -1));
   app.collection = '';
   app.loggedUser = null;
+  app.questionsLoaded = false;
+
+  app.firebaseURL = 'https://agilemeter.firebaseio.com';
+  app.firebaseProvider = 'google';
+
+  app.onFirebaseError = function(event) {
+    this.$.errorToast.text = event.detail.message;
+    this.$.errorToast.show();
+  };
+  app.onFirebaseLogin = function(event) {
+    console.log(event.detail.user.uid);
+    app.loggedUser = event.detail.user;
+    app.collection = "https://agilemeter.firebaseio.com/questions";
+    this.ref = new Firebase(this.firebaseURL + '/user/' + event.detail.user.uid);
+    this.ref.on('value', function(snapshot) {
+      app.updateItems(snapshot);
+    });
+  };
+
+  app.items = [];
+
+  app.updateItems = function(snapshot) {
+    this.items = [];
+    snapshot.forEach(function(childSnapshot) {
+      var item = childSnapshot.val();
+      item.uid = childSnapshot.key();
+      this.push('items', item);
+    }.bind(this));
+  };
+
+  app.addItem = function(event) {
+    //event.preventDefault(); // Don't send the form!
+    this.ref.push({
+      done: false,
+      text: app.newItemValue
+    });
+    app.newItemValue = '';
+  };
+
+  app.toggleItem = function(event) {
+    this.ref.
+      child(event.model.item.uid).
+      update({done: event.model.item.done});
+  };
+
+  app.deleteItem = function(event) {
+    this.ref.child(event.model.item.uid).remove();
+  };
 
   app._isQuestion = function(question) {
     if (!question) return false;
@@ -100,6 +153,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return 0;
     }
     return a.question > b.question ? -1 : 1;
+  };
+
+  app.doAnimation = function (argument) {
+    if (document.querySelector('[data-question]')) {
+      app.questionsLoaded = true;
+      console.log(app.questionsLoaded);
+    }
   };
 
   app.logged = function() {
