@@ -118,7 +118,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 },
                 showAnswer: false,
                 handleClick: function(e) {
-                  this.notAnswered = false;
+                  if (this.notAnswered) {
+                    app.register({right: e.currentTarget.innerText === this.correctAnswer});
+                    this.notAnswered = false;
+                  }
                 },
                 show: function(option) {
                   return option === this.correctAnswer;

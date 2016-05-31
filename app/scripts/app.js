@@ -166,4 +166,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
    return app.logged;
   };
 
+  app.register = function(answer) {
+   console.log(answer);
+  };
+
 })(document);
