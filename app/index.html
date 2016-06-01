@@ -111,6 +111,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     type: String,
                     value: ''
                   },
+                  id : '',
                   options : {
                     type: Array,
                     value: function() { return ['A','B','C','D']; }
@@ -119,7 +120,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 showAnswer: false,
                 handleClick: function(e) {
                   if (this.notAnswered) {
-                    app.register({right: e.currentTarget.innerText === this.correctAnswer});
+                    app.register({
+                      right: e.currentTarget.innerText === this.correctAnswer,
+                      id: this.id
+                    });
                     this.notAnswered = false;
                   }
                 },
@@ -153,8 +157,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <!-- Drawer Content -->
         <paper-menu class="app-menu" attr-for-selected="data-route" selected="[[route]]">
           <a data-route="home" href="{{baseUrl}}">
-            <iron-icon icon="home"></iron-icon>
-            <span>Home</span>
+            <iron-icon icon="spellcheck"></iron-icon>
+            <span>Questions</span>
+          </a>
+          <a data-route="stats" href="{{baseUrl}}stats" hidden$="{{!loggedUser}}">
+            <iron-icon icon="timeline"></iron-icon>
+            <span>Stats</span>
           </a>
 
           <template is="dom-repeat" items="[[sections]]" as="section">
@@ -164,10 +172,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </a>
           </template>
 
-            <a data-route="profile" href="{{baseUrl}}profile" hidden$="{{!loggedUser}}">
-              <iron-icon icon="account-circle"></iron-icon>
-              <span>Profile</span>
-            </a>
         </paper-menu>
       </paper-scroll-header-panel>
 
@@ -220,7 +224,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             <p>[[answer.option]]. [[answer.text]]</p>
                           </template>  
                         </div>           
-                        <my-question correct-answer="{{question.correct.option}}">
+                        <my-question correct-answer="{{question.correct.option}}" id="{{ question.__firebaseKey__ }}">
                           <div class="card-content">[[question.correct.text]]</div>
                         </my-question>                 
                       </paper-card>
@@ -239,10 +243,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </section>
           </template>
 
-            <section data-route="profile" tabindex="-1" hidden$="{{!loggedUser}}">
-              <paper-card heading="Profile">
+            <section data-route="stats" tabindex="-1" hidden$="{{!loggedUser}}">
+              <paper-card heading="Stats for [[loggedUser.google.displayName]]" class="profile">
                 <div class="card-content">
-                  Hi, [[loggedUser.google.displayName]]. Very soon , you'll find your stats here. We are in Beta mode , but you can go to practice your knowledge . What are you waiting for?
+                  <p hidden$="{{questionsLoaded}}">Calculating your stats...</p>
+                  <p hidden$="{{!questionsLoaded}}">Correct Answers: {{ goodQuestions }}/{{ totalQuestions }}</p>
+                  <p hidden$="{{!questionsLoaded}}">Total score: {{ successPercentage }}%</p>
                 </div>
                 <div class="card-actions">
                   <paper-button on-tap="logout">Log out</paper-button>

@@ -99,6 +99,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   app.firebaseURL = 'https://agilemeter.firebaseio.com';
   app.firebaseProvider = 'google';
 
+  app.successPercentage = null;
+
   app.onFirebaseError = function(event) {
     this.$.errorToast.text = event.detail.message;
     this.$.errorToast.show();
@@ -116,24 +118,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   app.items = [];
 
   app.updateItems = function(snapshot) {
+    var right = 0;
     this.items = [];
     snapshot.forEach(function(childSnapshot) {
       var item = childSnapshot.val();
       item.uid = childSnapshot.key();
       this.push('items', item);
+      right = item.right ? right + 1 : right;
     }.bind(this));
+    app.goodQuestions = right;
+    app.totalQuestions = this.items.length;
+    app.successPercentage = app.totalQuestions ? Math.round((app.goodQuestions * 100)/ app.totalQuestions) : 0;
+    //lanza un evento cuando se actualiza el objeto y por lo tanto la bdd
   };
 
-  app.addItem = function(event) {
-    //event.preventDefault(); // Don't send the form!
-    this.ref.push({
-      done: false,
-      text: app.newItemValue
-    });
-    app.newItemValue = '';
+  app.addItem = function(answer) {
+    this.ref.push(answer);
   };
 
-  app.toggleItem = function(event) {
+  /*app.toggleItem = function(event) {
     this.ref.
       child(event.model.item.uid).
       update({done: event.model.item.done});
@@ -141,7 +144,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   app.deleteItem = function(event) {
     this.ref.child(event.model.item.uid).remove();
-  };
+  };*/
 
   app._isQuestion = function(question) {
     if (!question) return false;
@@ -158,7 +161,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   app.doAnimation = function (argument) {
     if (document.querySelector('[data-question]')) {
       app.questionsLoaded = true;
-      console.log(app.questionsLoaded);
     }
   };
 
@@ -167,7 +169,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   };
 
   app.register = function(answer) {
-   console.log(answer);
+   app.addItem(answer);
   };
 
 })(document);

@@ -16,3 +16,27 @@ body {
 .page-title {
   outline: none;
 }
+
+  .paper-toolbar-0 {
+    background: #F44336;
+  }
+
+.paper-menu-0 .selectable-content.paper-menu > .iron-selected {
+      background-color: #F17269;
+}
+
+paper-card {
+    margin-bottom: 10px;
+    max-width: 540px;
+  }
+
+paper-card.question, paper-card.profile {
+  width: 100%;
+  max-width: auto;
+}
+
+.paper-button-0 { min-width: 4em; }
+
+.paper-menu-0 .selectable-content.paper-menu > *:focus:after {
+  background: gray;
+}
